@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>API-Demo</title>
+</head>
+<body>
+  <h1>API-Demo</h1>
+
+  <h2>temp</h2>
+  <select id="t_mode">
+    <option value="celsius">Celsius → Kelvin</option>
+    <option value="kelvin">Kelvin → Celsius</option>
+  </select>
+  <input id="t_val" type="number" step="any" placeholder="Wert">
+  <button id="t_btn">Umrechnen</button>
+  <pre id="t_out">-</pre>
+
+  <h2>prime</h2>
+  <input id="p_limit" type="number" min="2" max="10000" value="10">
+  <button id="p_btn">Primzahlen holen</button>
+  <pre id="p_out">-</pre>
+
+  <h2>number</h2>
+  <input id="n_val" type="number" min="0" max="50" value="5">
+  <button id="n_btn">Fibonacci</button>
+  <pre id="n_out">-</pre>
+
+  <script>
+    document.getElementById("t_btn").onclick = async () => {
+      const mode = document.getElementById("t_mode").value;
+      const val = document.getElementById("t_val").value;
+      if (!val) { document.getElementById("t_out").textContent = "Bitte eingeben"; return; }
+      const qs = mode === "celsius" ? "celsius=" + val : "kelvin=" + val;
+      const r = await fetch("/api/temp?" + qs);
+      document.getElementById("t_out").textContent = await r.text();
+    };
+    document.getElementById("p_btn").onclick = async () => {
+      const limit = document.getElementById("p_limit").value;
+      if (!limit) { document.getElementById("p_out").textContent = "Bitte eingeben"; return; }
+      const r = await fetch("/api/prime?limit=" + limit);
+      document.getElementById("p_out").textContent = await r.text();
+    };
+    document.getElementById("n_btn").onclick = async () => {
+      const n = document.getElementById("n_val").value;
+      if (!n && n !== "0") { document.getElementById("n_out").textContent = "Bitte eingeben"; return; }
+      const r = await fetch("/api/number?n=" + n);
+      document.getElementById("n_out").textContent = await r.text();
+    };
+  </script>
+</body>
+</html>
