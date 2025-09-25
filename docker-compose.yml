@@ -1,6 +1,12 @@
+networks:
+  app:
+    external: true
+
 services:
   api:
     build: .
     ports:
       - "8000:8000"
     restart: unless-stopped
+    networks:
+      - app
